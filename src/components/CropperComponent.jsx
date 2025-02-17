@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import * as faceapi from "face-api.js";
@@ -11,12 +11,14 @@ const CropperComponent = ({
   state,
 }) => {
   const cropperRef = useRef(null);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
   useEffect(() => {
     const loadModels = async () => {
       await faceapi.nets.ssdMobilenetv1.loadFromUri("/models");
       await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
       await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+      setModelsLoaded(true); // Ensure models are loaded
     };
     loadModels();
   }, []);
@@ -25,7 +27,7 @@ const CropperComponent = ({
     const cropper = cropperRef.current?.cropper;
     if (cropper && aspectRatio) {
       const [w, h] = aspectRatio.split(":").map(Number);
-      cropper.setAspectRatio(w / h); // Ensure aspect ratio updates correctly
+      cropper.setAspectRatio(w / h);
     }
   }, [aspectRatio]);
 
@@ -65,7 +67,7 @@ const CropperComponent = ({
   };
 
   useEffect(() => {
-    if (state.isLoading) {
+    if (state.isLoading && modelsLoaded) {
       const image = new Image();
       image.src = state.image;
       image.onload = async () => {
@@ -73,7 +75,7 @@ const CropperComponent = ({
         setState((prevState) => ({
           ...prevState,
           detections,
-          isLoading: false, // Set loading state to false after detection
+          isLoading: false,
         }));
         if (detections.length > 0) {
           const boundingBox = calculateBoundingBox(detections);
@@ -81,7 +83,7 @@ const CropperComponent = ({
         }
       };
     }
-  }, [state.isLoading, state.image, setState]);
+  }, [state.isLoading, state.image, modelsLoaded, setState]);
 
   return (
     <>
