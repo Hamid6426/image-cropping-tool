@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { MdDownload } from "react-icons/md";
 
 const DownloadButton = ({ croppedImage }) => {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -27,7 +28,7 @@ const DownloadButton = ({ croppedImage }) => {
         !croppedImage || isDownloading ? "cursor-not-allowed bg-gray-400" : ""
       }`}
     >
-      {isDownloading ? <div className="loader"></div> : "Download"}
+      {isDownloading ? <div className="loader"></div> : <MdDownload/>}
     </button>
   );
 };

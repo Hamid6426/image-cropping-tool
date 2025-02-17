@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { MdCrop, MdCrop169, MdCropPortrait, MdCropSquare } from "react-icons/md";
+import { MdClose, MdCrop, MdCrop169, MdCropPortrait, MdCropSquare, MdRemove } from "react-icons/md";
 import AspectRatioOptions from "./components/AspectRatioOptions";
 import DownloadButton from "./components/DownloadButton";
 import PanModeToggle from "./components/PanModeToggle";
@@ -54,9 +54,8 @@ const App = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      
-      <header className="w-full px-6 py-3 gap-3 flex flex-row items-center justify-between bg-gray-900">
-        <div className="text-blue-600 font-bold text-2xl">Image Cropping Tool</div>
+      <header className="w-full px-6 py-3 gap-3 flex flex-row items-center justify-start overflow-auto md:justify-between bg-gray-900">
+        <div className="md:flex hidden text-blue-600 font-bold text-2xl">Image Cropping Tool</div>
         <div className="flex gap-3">
         <AspectRatioOptions
           options={options}
@@ -73,7 +72,7 @@ const App = () => {
             onClick={handleReset}
             className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
           >
-            Remove Image
+            <MdClose />
           </button>
         )}
         </div>
